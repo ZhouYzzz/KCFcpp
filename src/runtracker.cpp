@@ -9,6 +9,10 @@
 #include "kcftracker.hpp"
 
 #include <dirent.h>
+#include "ffteg.hpp"
+#include <thread>         // std::thread
+#include <mutex>          // std::mutex
+std::mutex mtx;
 
 using namespace std;
 using namespace cv;
@@ -39,7 +43,7 @@ int main(int argc, char* argv[]){
 		if ( strcmp (argv[i], "gray") == 0 )
 			HOG = false;
 	}
-	
+
 	// Create KCFTracker object
 	KCFTracker tracker(HOG, FIXEDWINDOW, MULTISCALE, LAB);
 
@@ -61,7 +65,7 @@ int main(int argc, char* argv[]){
   	string firstLine;
   	getline(groundtruthFile, firstLine);
 	groundtruthFile.close();
-  	
+
   	istringstream ss(firstLine);
 
   	// Read groundtruth like a dumb
@@ -81,7 +85,7 @@ int main(int argc, char* argv[]){
 	ss >> ch;
 	ss >> x4;
 	ss >> ch;
-	ss >> y4; 
+	ss >> y4;
 
 	// Using min and max of X and Y for groundtruth rectangle
 	float xMin =  min(x1, min(x2, min(x3, x4)));
@@ -89,7 +93,7 @@ int main(int argc, char* argv[]){
 	float width = max(x1, max(x2, max(x3, x4))) - xMin;
 	float height = max(y1, max(y2, max(y3, y4))) - yMin;
 
-	
+
 	// Read Images
 	ifstream listFramesFile;
 	string listFrames = "images.txt";
@@ -136,4 +140,15 @@ int main(int argc, char* argv[]){
 
 	listFile.close();
 
+	std::cout << "BEGIN" << std::endl;
+	Mat a(4,4,CV_32FC2,Scalar(1,3));
+	std::cout << a << std::endl;
+	// mtx.lock();
+	FFTEngine eg(a);
+	// mtx.unlock();
+	// for (int i=1; i<5; i++)
+	eg.fft();
+	std::cout << a << std::endl;
+	return 0;
+	// delete eg;
 }

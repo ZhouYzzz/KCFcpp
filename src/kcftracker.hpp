@@ -83,6 +83,7 @@ the use of this software, even if advised of the possibility of such damage.
 #pragma once
 
 #include "tracker.h"
+#include "ffteg.hpp"
 
 #ifndef _OPENCV_KCFTRACKER_HPP_
 #define _OPENCV_KCFTRACKER_HPP_
@@ -94,9 +95,9 @@ public:
     // Constructor
     KCFTracker(bool hog = true, bool fixed_window = true, bool multiscale = true, bool lab = true);
 
-    // Initialize tracker 
+    // Initialize tracker
     virtual void init(const cv::Rect &roi, cv::Mat image);
-    
+
     // Update position based on the new frame
     virtual cv::Rect update(cv::Mat image);
 
@@ -148,4 +149,8 @@ private:
     int _gaussian_size;
     bool _hogfeatures;
     bool _labfeatures;
+
+    // fftw3f related
+    // FFTEG eg(cv::Mat, cv::Mat);
+    // FFTEG egs(cv::Mat, cv::Mat);
 };
